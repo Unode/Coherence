@@ -429,6 +429,7 @@ class Coherence(log.Loggable):
 
     def add_plugin(self, plugin, **kwargs):
         self.info("adding plugin %r", plugin)
+        self.debug("args: %s", kwargs)
 
         self.available_plugins = Plugins()
 
@@ -442,6 +443,7 @@ class Coherence(log.Loggable):
                     if device_class == None:
                         raise KeyError
                     self.info("Activating %s plugin as %s..." % (plugin, device))
+                    self.debug("Creating %s(self, %s, %s)" % (device_class, plugin_class, kwargs))
                     new_backend = device_class(self, plugin_class, **kwargs)
                     self.active_backends[str(new_backend.uuid)] = new_backend
                     return new_backend
@@ -637,9 +639,9 @@ class Coherence(log.Loggable):
         return [d for d in self.devices if d.manifestation == 'remote']
 
     def create_device(self, device_type, infos):
-        self.info("creating ", infos['ST'],infos['USN'])
+        self.info("creating %s %s", infos['ST'],infos['USN'])
         if infos['ST'] == 'upnp:rootdevice':
-            self.info("creating upnp:rootdevice ", infos['USN'])
+            self.info("creating upnp:rootdevice %s", infos['USN'])
             root = RootDevice(infos)
         else:
             self.info("creating device/service ",infos['USN'])
@@ -652,7 +654,7 @@ class Coherence(log.Loggable):
         #    self.callback("new_device", infos['ST'], infos)
 
     def add_device(self, device):
-        self.info("adding device",device.get_id(),device.get_usn(),device.friendly_device_type)
+        self.info("adding device id=%s usn=%s type=%s",device.get_id(),device.get_usn(),device.friendly_device_type)
         self.devices.append(device)
 
     def remove_device(self, device_type, infos):

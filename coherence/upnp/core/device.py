@@ -57,7 +57,7 @@ class Device(log.Loggable):
         return d
 
     def remove(self,*args):
-        self.info("removal of ", self.friendly_name, self.udn)
+        self.info("removal of %s %s", self.friendly_name, self.udn)
         while len(self.devices)>0:
             device = self.devices.pop()
             self.debug("try to remove %r", device)
