@@ -592,6 +592,9 @@ class MediaServer(log.Loggable,BasicDeviceMixin):
     
     presentationURL = None
 
+    def __init__(self, coherence, backend, **kwargs):
+        BasicDeviceMixin.__init__(self, coherence, backend, **kwargs)
+
     def fire(self,backend,**kwargs):
 
         if kwargs.get('no_thread_needed',False) == False:
