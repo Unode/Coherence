@@ -243,6 +243,7 @@ class FSItem(BackendItem):
                 except NoThumbnailFound:
                     pass
                 except:
+                    import traceback
                     self.warning(traceback.format_exc())
                 else:
                     dlna_tags = simple_dlna_tags[:]
@@ -694,13 +695,14 @@ class FSStore(BackendStore):
                 return None
 
             id = self.create(mimetype,path,parent)
+            import functools
 
             if mimetype == 'directory':
                 if self.inotify is not None:
                     mask = IN_CREATE | IN_DELETE | IN_MOVED_FROM | IN_MOVED_TO | IN_CHANGED
                     self.inotify.watch(
                         path, mask=mask, autoAdd=False,
-                        callbacks=[partial(self.notify, parameter=id)])
+                        callbacks=[functools.partial(self.notify, parameter=id)])
                 return self.store[id]
         except OSError, msg:
             """ seems we have some permissions issues along the content path """
