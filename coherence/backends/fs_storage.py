@@ -71,7 +71,7 @@ def _find_thumbnail(filename,thumbnail_folder='.thumbs'):
         or throws an Exception otherwise
     """
     name,ext = os.path.splitext(os.path.basename(filename))
-    pattern = os.path.join(os.path.dirname(filename),thumbnail_folder,name+'.*')
+    pattern = re.escape(os.path.join(os.path.dirname(filename),thumbnail_folder,name)) + '.*'
     for f in glob.glob(pattern):
         mimetype,_ = mimetypes.guess_type(f, strict=False)
         if mimetype in ('image/jpeg','image/png'):
