@@ -6,6 +6,7 @@
 
 import time
 from urlparse import urlsplit
+import logging
 
 from twisted.internet import reactor, defer
 from twisted.web import resource, server
@@ -265,7 +266,7 @@ def subscribe(service, action='subscribe'):
     return the device response
     """
     log_category = "event_protocol"
-    log.getLogger(log_category).info( "event.subscribe, action: %r", action)
+    logging.getLogger(log_category).info( "event.subscribe, action: %r", action)
 
     _,host_port,path,_,_ = urlsplit(service.get_base_url())
     if host_port.find(':') != -1:
@@ -276,7 +277,7 @@ def subscribe(service, action='subscribe'):
         port = 80
 
     def send_request(p, action):
-        log.getLogger(log_category).info( "event.subscribe.send_request %r, action: %r %r",
+        logging.getLogger(log_category).info( "event.subscribe.send_request %r, action: %r %r",
                  p, action, service.get_event_sub_url())
         _,_,event_path,_,_ = urlsplit(service.get_event_sub_url())
         if action == 'subscribe':
@@ -309,29 +310,29 @@ def subscribe(service, action='subscribe'):
         request.append( "")
         request.append( "")
         request = '\r\n'.join(request)
-        log.getLogger(log_category).debug( "event.subscribe.send_request %r %r", request, p)
+        logging.getLogger(log_category).debug( "event.subscribe.send_request %r %r", request, p)
         try:
             p.transport.writeSomeData(request)
         except AttributeError:
-            log.getLogger(log_category).info( "transport for event %r already gone", action)
+            logging.getLogger(log_category).info( "transport for event %r already gone", action)
        # print "event.subscribe.send_request", d
         #return d
 
     def got_error(failure, action):
-        log.getLogger(log_category).info( "error on %s request with %s" % (action,service.get_base_url()))
-        log.getLogger(log_category).debug( failure)
+        logging.getLogger(log_category).info( "error on %s request with %s" % (action,service.get_base_url()))
+        logging.getLogger(log_category).debug( failure)
 
     def teardown_connection(c, d):
-        log.getLogger(log_category).info( "event.subscribe.teardown_connection")
+        logging.getLogger(log_category).info( "event.subscribe.teardown_connection")
         del d
         del c
 
     def prepare_connection( service, action):
-        log.getLogger(log_category).info("event.subscribe.prepare_connection action: %r %r"%
+        logging.getLogger(log_category).info("event.subscribe.prepare_connection action: %r %r"%
                  (action, service.event_connection))
         if service.event_connection == None:
             c = ClientCreator(reactor, EventProtocol, service=service, action=action)
-            log.getLogger(log_category).info("event.subscribe.prepare_connection: %r %r" %
+            logging.getLogger(log_category).info("event.subscribe.prepare_connection: %r %r" %
                      (host, port))
             d = c.connectTCP(host, port)
             d.addCallback(send_request, action=action)
@@ -413,9 +414,9 @@ def send_notification(s, xml):
                     xml]
 
         request = '\r\n'.join(request)
-        log.getLogger(log_category).info( "send_notification.send_request to %r %r",
+        logging.getLogger(log_category).info( "send_notification.send_request to %r %r",
                  s['sid'], s['callback'])
-        log.getLogger(log_category).debug( "request: %r", request)
+        logging.getLogger(log_category).debug( "request: %r", request)
         s['seq'] += 1
         if s['seq'] > 0xffffffff:
             s['seq'] = 1
@@ -425,9 +426,9 @@ def send_notification(s, xml):
 
     def got_error(failure,port_item):
         port_item.disconnect()
-        log.getLogger(log_category).info( "error sending notification to %r %r",
+        logging.getLogger(log_category).info( "error sending notification to %r %r",
                  s['sid'], s['callback'])
-        log.getLogger(log_category).debug( failure)
+        logging.getLogger(log_category).debug( failure)
 
     #c = ClientCreator(reactor, NotificationProtocol)
     #d = c.connectTCP(host, port)

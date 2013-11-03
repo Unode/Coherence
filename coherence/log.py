@@ -7,9 +7,9 @@ import os
 import logging
 import sys
 
-LOG_FORMAT =('%(levelname)s %-27(name)s '
+LOG_FORMAT =('%(levelname)s %(name)s '
              '%(asctime)s %(message)s '
-             '(%(filename)s:%(lineno))')
+             '(%(filename)s:%(lineno)s)')
 
 ENV_VAR_NAME = 'COHERENCE_DEBUG'
 

@@ -67,7 +67,7 @@ class UPnPPublisher(resource.Resource, log.Loggable):
         self._sendResponse(request, response)
 
     def _gotError(self, failure, request, methodName, ns):
-        self.info('_gotError', failure, failure.value)
+        self.info('_gotError(%r, %r)', failure, failure.value)
         e = failure.value
         status = 500
 

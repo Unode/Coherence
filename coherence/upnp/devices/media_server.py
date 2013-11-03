@@ -316,7 +316,7 @@ class MSRoot(resource.Resource, log.Loggable):
 
     def process_child(self,ch,name,request):
         if ch != None:
-            self.info('Child found', ch)
+            self.info('Child found: %r', ch)
             if(request.method == 'GET' or
                request.method == 'HEAD'):
                 headers = request.getAllHeaders()
@@ -364,7 +364,7 @@ class MSRoot(resource.Resource, log.Loggable):
             p = util.sibpath(__file__, name)
             if os.path.exists(p):
                 ch = StaticFile(p)
-        self.info('MSRoot ch', ch)
+        self.info('MSRoot ch %r', ch)
         return ch
 
     def getChild(self, name, request):

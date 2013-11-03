@@ -522,7 +522,7 @@ class RootDevice(Device):
         self.devices.append(device)
 
     def get_devices(self):
-        self.debug("RootDevice get_devices:", self.devices)
+        self.debug("RootDevice get_devices: %r", self.devices)
         return self.devices
 
     def parse_description(self):
