@@ -17,9 +17,12 @@ from datetime import datetime
 
 DC_NS = 'http://purl.org/dc/elements/1.1/'
 UPNP_NS = 'urn:schemas-upnp-org:metadata-1-0/upnp/'
+# Required for subtitles
+SEC_NS = 'http://www.sec.co.kr/dlna'
 
 my_namespaces = { DC_NS: 'dc',
-                 UPNP_NS: 'upnp'
+                 UPNP_NS: 'upnp',
+                 SEC_NS: 'sec',
                  }
 from coherence.extern.et import ET, namespace_map_update, ElementInterface
 namespace_map_update(my_namespaces)
