@@ -137,6 +137,15 @@ def parse_xml(data, encoding="utf-8",dump_invalid_data=False):
 
     # Guess from who we're getting this?
     data = data.replace('\x00','')
+
+    # Also on replies from minidlna that include subtitles, the xmlns:sec
+    # namespace is missing in the XML header. Since having the namespace is
+    # in theory harmless, add it by default
+    if "sec:CaptionInfo" in data and "xmlns:sec=" not in data:
+        data = data.replace('xmlns:upnp=',
+                            'xmlns:sec="http://www.sec.co.kr/dlna" xmlns:upnp='
+                            )
+
     try:
         p.feed(data)
     except Exception, error:
