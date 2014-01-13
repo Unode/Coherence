@@ -374,6 +374,24 @@ class PlayContainerResource(Resource):
             self.protocolInfo = 'http-get:*:*:*'
 
 
+class Subtitle(Resource):
+    """An object representing a subtitle resource."""
+
+    def __init__(self, data=None):
+        self.data = data
+        self.type = None
+
+    def toElement(self, **kwargs):
+        raise NotImplementedError
+
+    def fromElement(self, elt):
+        self.data = elt.text
+        for key in elt.attrib:
+            # At least with MiniDLNA 'type' includes the namespace as prefix
+            if key.endswith("type"):
+                self.type = elt.attrib.get(key)
+
+
 class Object(log.Loggable):
     """The root class of the entire content directory class heirachy."""
 
@@ -382,6 +400,7 @@ class Object(log.Loggable):
     upnp_class = 'object'
     creator = None
     res = None
+    sec = None
     writeStatus = None
     date = None
     albumArtURI = None
@@ -405,6 +424,7 @@ class Object(log.Loggable):
         self.creator = creator
         self.restricted = restricted
         self.res = Resources()
+        self.sec = []
 
     def checkUpdate(self):
         return self
@@ -575,6 +595,9 @@ class Object(log.Loggable):
             elif child.tag.endswith('res'):
                 res = Resource.fromString(ET.tostring(child))
                 self.res.append(res)
+            elif child.tag.endswith('CaptionInfoEx'):
+                sec = Subtitle.fromString(ET.tostring(child))
+                self.sec.append(sec)
 
     @classmethod
     def fromString(cls, data):

@@ -102,6 +102,13 @@ class ContentDirectoryClient:
                         resources[url] = res.protocolInfo
                     if len(resources):
                         i['resources']= resources
+                if hasattr(item,'sec'):
+                    subtitles = {}
+                    for sub in item.sec:
+                        url = sub.data
+                        subtitles[url] = sub.type
+                    if len(subtitles):
+                        i['subtitles']= subtitles
                 r['items'][item.id] = i
             return r
 
